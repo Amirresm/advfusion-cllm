@@ -23,7 +23,7 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/codellama7b_ct/adp_${lang}"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/codellama7b_ct/lora_${lang}"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
@@ -37,8 +37,8 @@ benchmark_dataset_name_or_path="$STORAGE_ROOT/data/ct_bench_dataset/ct_bench_dat
 python -m scripts.train \
 	--model_name_or_path "${model_path}" \
 	--q "4bit" \
-	--lib "adp" \
-	--peft "seq_bn" \
+	--lib "peft" \
+	--peft "lora" \
 	--dataset_name_or_path "${ds_path}" \
 	--train_file train.jsonl \
 	--validation_file valid.jsonl \
