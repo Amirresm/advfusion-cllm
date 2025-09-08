@@ -180,6 +180,7 @@ def main():
             epochs=args.train.epochs,
             learning_rate=args.train.learning_rate,
             warmup_ratio=args.train.warmup_ratio,
+            optim=args.train.optim,
             logging_steps=args.train.logging_steps,
             eval_steps=args.train.eval_steps,
             eval_accumulation_steps=args.train.eval_accumulation_steps,
