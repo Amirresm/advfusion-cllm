@@ -2,7 +2,7 @@
 
 #SBATCH --time=24:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=16000M
+#SBATCH --mem-per-cpu=64000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
@@ -64,7 +64,8 @@ python -m scripts.train_advf \
 	--train_completions_only False \
 	--train_batch_size 1 \
 	--gradient_accumulation_steps 4 \
-	--learning_rate 1e-4 \
+	--learning_rate 1e-5 \
+	--optim "paged_adamw_8bit" \
 	--do_eval \
 	--eval_batch_size 1 \
 	--logging_steps 0.05 \
