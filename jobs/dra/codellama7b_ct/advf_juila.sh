@@ -2,7 +2,7 @@
 
 #SBATCH --time=18:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=16000M
+#SBATCH --mem-per-cpu=32000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
@@ -72,7 +72,7 @@ python -m scripts.train_advf \
 	--valid_text_max_length 2048 \
 	--valid_target_max_length 2048 \
 	--gen_pre_train_max_samples 32 \
-	--gen_batch_size 16 \
+	--gen_batch_size 8 \
 	--test_text_max_length 4096 \
 	--test_target_max_length 2048 \
 	--benchmark_dataset_name_or_path "${benchmark_dataset_name_or_path}" \
