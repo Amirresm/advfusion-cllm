@@ -23,7 +23,7 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder32b_ct/advf_${lang}"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder32b_ct/fusion_${lang}"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
@@ -31,8 +31,6 @@ pip freeze >"$OUTPUT_DIR/requirements.txt"
 
 model_path="$STORAGE_ROOT/models/Qwen/Qwen2.5-Coder-32B"
 ds_path="$STORAGE_ROOT/data/ct_dataset/${lang}"
-
-target_adapter_path="/scratch/amirresm/outputs/advfusion/qwen2.5coder32b_ct/adp_${lang}"
 
 adapter_path_list=(
 	"/scratch/amirresm/outputs/advfusion/qwen2.5coder32b_ct/adp_julia"
@@ -43,11 +41,10 @@ adapter_path_list=(
 
 benchmark_dataset_name_or_path="$STORAGE_ROOT/data/ct_bench_dataset/ct_bench_dataset_all_${lang}.jsonl"
 
-python -m scripts.train_advf \
+python -m scripts.train_fusion \
 	--model_name_or_path "${model_path}" \
 	--q "4bit" \
 	--adapter_path_list "${adapter_path_list[@]}" \
-	--target_adapter_path "$target_adapter_path" \
 	--dataset_name_or_path "${ds_path}" \
 	--train_file train.jsonl \
 	--validation_file valid.jsonl \
