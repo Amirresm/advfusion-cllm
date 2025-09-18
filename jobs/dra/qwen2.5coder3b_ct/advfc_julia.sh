@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=8:00:00
+#SBATCH --time=12:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=16000M
-#SBATCH --gpus-per-node=1
+#SBATCH --mem-per-cpu=32000M
+#SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
 echo "TMP DIR: ${SLURM_TMPDIR}"

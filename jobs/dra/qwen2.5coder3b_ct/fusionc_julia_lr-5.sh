@@ -23,7 +23,7 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/fusionc_${lang}"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/fusionc_${lang}_lr-5"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
@@ -61,7 +61,7 @@ python -m scripts.train_fusion \
 	--train_completions_only False \
 	--train_batch_size 4 \
 	--gradient_accumulation_steps 1 \
-	--learning_rate 1e-4 \
+	--learning_rate 1e-5 \
 	--do_eval \
 	--eval_batch_size 4 \
 	--logging_steps 0.05 \
