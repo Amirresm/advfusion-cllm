@@ -2,7 +2,7 @@
 
 #SBATCH --time=24:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=16000M
+#SBATCH --mem-per-cpu=32000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
@@ -23,7 +23,7 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/advf_${lang}"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/advf_${lang}_e20"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1

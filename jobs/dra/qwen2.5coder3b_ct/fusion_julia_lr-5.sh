@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=24:00:00
+#SBATCH --time=8:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=32000M
+#SBATCH --mem-per-cpu=16000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
@@ -23,7 +23,7 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/fusion_${lang}_e20"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder3b_ct/fusion_${lang}_lr-5"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
@@ -56,12 +56,12 @@ python -m scripts.train_fusion \
 	--train_text_max_length 4096 \
 	--train_target_max_length 4096 \
 	--train_max_length 8192 \
-	--epochs 20 \
+	--epochs 2 \
 	--do_train \
 	--train_completions_only False \
 	--train_batch_size 4 \
 	--gradient_accumulation_steps 1 \
-	--learning_rate 1e-4 \
+	--learning_rate 1e-5 \
 	--do_eval \
 	--eval_batch_size 4 \
 	--logging_steps 0.05 \
