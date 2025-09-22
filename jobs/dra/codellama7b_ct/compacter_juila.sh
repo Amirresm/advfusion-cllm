@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=10:00:00
+#SBATCH --time=14:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=16000M
+#SBATCH --mem-per-cpu=32000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
