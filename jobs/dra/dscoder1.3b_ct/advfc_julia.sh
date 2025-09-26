@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=12:00:00
+#SBATCH --time=16:00:00
 #SBATCH --account=rrg-fard
 #SBATCH --mem-per-cpu=32000M
 #SBATCH --gpus-per-node=h100:1
@@ -23,22 +23,22 @@ echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
 lang="julia"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/advf_${lang}"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/advfc_${lang}"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
 pip freeze >"$OUTPUT_DIR/requirements.txt"
 
-model_path="$STORAGE_ROOT/models/Qwen/Qwen2.5-Coder-1.5B"
+model_path="$STORAGE_ROOT/models/deepseek-ai/deepseek-coder-1.3b-base"
 ds_path="$STORAGE_ROOT/data/ct_dataset/${lang}"
 
-target_adapter_path="/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_${lang}"
+target_adapter_path="/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/compacter_${lang}"
 
 adapter_path_list=(
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_julia"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_ruby"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_scala"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_swift"
+	"/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/compacter_julia"
+	"/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/compacter_ruby"
+	"/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/compacter_scala"
+	"/scratch/amirresm/outputs/advfusion/dscoder1.3b_ct/compacter_swift"
 )
 
 benchmark_dataset_name_or_path="$STORAGE_ROOT/data/ct_bench_dataset/ct_bench_dataset_all_${lang}.jsonl"

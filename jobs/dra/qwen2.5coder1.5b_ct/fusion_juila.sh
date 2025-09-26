@@ -33,10 +33,10 @@ model_path="$STORAGE_ROOT/models/Qwen/Qwen2.5-Coder-1.5B"
 ds_path="$STORAGE_ROOT/data/ct_dataset/${lang}"
 
 adapter_path_list=(
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5_ct/adp_julia"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5_ct/adp_ruby"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5_ct/adp_scala"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5_ct/adp_swift"
+	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_julia"
+	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_ruby"
+	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_scala"
+	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_swift"
 )
 
 benchmark_dataset_name_or_path="$STORAGE_ROOT/data/ct_bench_dataset/ct_bench_dataset_all_${lang}.jsonl"
