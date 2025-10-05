@@ -21,7 +21,7 @@ source "$PROJECT_ROOT/jobs/dra/_setup.sh"
 
 echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
-lang="julia"
+lang="scala"
 
 OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/fusion_${lang}_lr-5"
 mkdir -p "$OUTPUT_DIR"

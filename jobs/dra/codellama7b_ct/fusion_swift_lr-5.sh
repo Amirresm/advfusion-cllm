@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=12:00:00
+#SBATCH --time=18:00:00
 #SBATCH --account=rrg-fard
-#SBATCH --mem-per-cpu=64000M
+#SBATCH --mem-per-cpu=32000M
 #SBATCH --gpus-per-node=h100:1
 #SBATCH --output=O-%x.%j.out
 
@@ -21,22 +21,22 @@ source "$PROJECT_ROOT/jobs/dra/_setup.sh"
 
 echo "Starting job on '$MACHINE' at $(date) in project root: $PROJECT_ROOT"
 
-lang="julia"
+lang="swift"
 
-OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/fusion_${lang}_lr-5"
+OUTPUT_DIR="/scratch/amirresm/outputs/advfusion/codellama7b_ct/fusion_${lang}_lr-5"
 mkdir -p "$OUTPUT_DIR"
 rm "$OUTPUT_DIR"/job.log || true
 exec > >(tee -a "$OUTPUT_DIR/job.log") 2>&1
 pip freeze >"$OUTPUT_DIR/requirements.txt"
 
-model_path="$STORAGE_ROOT/models/Qwen/Qwen2.5-Coder-1.5B"
+model_path="$STORAGE_ROOT/models/meta-llama/CodeLlama-7b-hf"
 ds_path="$STORAGE_ROOT/data/ct_dataset/${lang}"
 
 adapter_path_list=(
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_julia"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_ruby"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_scala"
-	"/scratch/amirresm/outputs/advfusion/qwen2.5coder1.5b_ct/adp_swift"
+	"/scratch/amirresm/outputs/advfusion/codellama7b_ct/adp_julia"
+	"/scratch/amirresm/outputs/advfusion/codellama7b_ct/adp_ruby"
+	"/scratch/amirresm/outputs/advfusion/codellama7b_ct/adp_scala"
+	"/scratch/amirresm/outputs/advfusion/codellama7b_ct/adp_swift"
 )
 
 benchmark_dataset_name_or_path="$STORAGE_ROOT/data/ct_bench_dataset/ct_bench_dataset_all_${lang}.jsonl"
@@ -59,8 +59,8 @@ python -m scripts.train_fusion \
 	--epochs 2 \
 	--do_train \
 	--train_completions_only False \
-	--train_batch_size 4 \
-	--gradient_accumulation_steps 1 \
+	--train_batch_size 1 \
+	--gradient_accumulation_steps 4 \
 	--learning_rate 1e-5 \
 	--do_eval \
 	--eval_batch_size 1 \
@@ -69,7 +69,7 @@ python -m scripts.train_fusion \
 	--valid_text_max_length 2048 \
 	--valid_target_max_length 2048 \
 	--gen_pre_train_max_samples 32 \
-	--gen_batch_size 16 \
+	--gen_batch_size 8 \
 	--test_text_max_length 4096 \
 	--test_target_max_length 2048 \
 	--benchmark_dataset_name_or_path "${benchmark_dataset_name_or_path}" \
