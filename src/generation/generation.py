@@ -165,8 +165,27 @@ def generate_raw_samples(
     tokenizer.padding_side = "left"
 
     generations_path = f"{save_path}_samples.jsonl" if save_path else None
+    # if generations_path and os.path.exists(generations_path):
+    #     os.remove(generations_path)
+
+    initial_index = 0
     if generations_path and os.path.exists(generations_path):
-        os.remove(generations_path)
+        existing_indices = set()
+        with open(generations_path, "r") as f:
+            for line in f:
+                row = json.loads(line)
+                existing_indices.add(row["index"])
+        print(
+            f"Found {len(existing_indices)} existing samples in {generations_path}, skipping them."
+        )
+        samples = {
+            k: [v[i] for i in range(len(v)) if i not in existing_indices]
+            for k, v in samples.items()
+        }
+        initial_index = len(existing_indices)
+        if len(samples[input_column]) == 0:
+            print("All samples already generated, skipping.")
+            return
 
     results = []
     batches = []
@@ -248,7 +267,7 @@ def generate_raw_samples(
                     metrics = {}
 
                 result_row = {
-                    "index": index,
+                    "index": index + initial_index,
                     "input": input,
                     "target": target,
                     "generation": generation,
