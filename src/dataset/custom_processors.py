@@ -1,6 +1,8 @@
 from typing import Callable, TypedDict
 
 from src.dataset.utils import DatasetType
+import difflib
+import inspect
 
 
 class RawRow(TypedDict):
@@ -93,6 +95,42 @@ def code_gen_processor(example: dict) -> RawRow:
     }
 
 
+def cmg_processor(example: dict) -> RawRow:
+    prompts = []
+    targets = []
+    for old_file, new_file, old_content, new_content, subject in zip(
+        example["old_file"],
+        example["new_file"],
+        example["old_contents"],
+        example["new_contents"],
+        example["subject"],
+    ):
+        diff = difflib.unified_diff(
+            old_content.splitlines(),
+            new_content.splitlines(),
+            fromfile=old_file,
+            tofile=new_file,
+            lineterm="",
+        )
+        prompt = (
+            "Based on the change given, only write commit message.\n"
+            + "### Diff:\n"
+            + "\n".join(diff)
+            + "\n### Commit Message:\n"
+        )
+        prompts.append(prompt)
+        targets.append(subject)
+
+    return {
+        "TEXT": prompts,
+        "TARGET": targets,
+    }
+
+
+print("Current implementation of cmg_processor:\n")
+print(inspect.getsource(cmg_processor))
+
+
 def get_dataset_processor(dataset_type: DatasetType) -> RawPreprocessor:
     if dataset_type == DatasetType.CodeSearchNet:
         return csn_processor
@@ -100,6 +138,8 @@ def get_dataset_processor(dataset_type: DatasetType) -> RawPreprocessor:
         return code_gen_processor
     elif dataset_type == DatasetType.CodeTranslation:
         return ct_processor
+    elif dataset_type == DatasetType.CMG:
+        return cmg_processor
     elif dataset_type == DatasetType.CodeTranslationBench:
         return ct_bench_processor
     else:
