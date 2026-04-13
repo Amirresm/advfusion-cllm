@@ -1,6 +1,8 @@
 # AdvFusion
 
-This repository contains the implementation of experiments for the paper on **AdvFusion**, a parameter-efficient fine-tuning (PEFT) method for multilingual knowledge transfer in code language models (Code-LLMs).
+📄 [Paper (arXiv)](https://arxiv.org/abs/2511.02869)
+
+This repository contains the implementation of experiments for the paper: Analysis of AdvFusion: Adapter-based Multilingual Learning for Code Large Language Models
 
 ---
 
@@ -246,3 +248,18 @@ Each processor must return:
   "target": ...
 }
 ```
+
+## Citation
+
+If you use this repository, please cite our work:
+
+```bibtex
+@article{advfusion-analysis2025,
+  title={Analysis of AdvFusion: Adapter-based Multilingual Learning for Code Large Language Models},
+  author={Esmaeili, Amirreza and Seddik, Fahd and Ji, Yongyi and Fard, Fatemeh and Chen, Fuxiang},
+  journal={arXiv preprint arXiv:2511.02869},
+  year={2025}
+}
+```
+
+_Note:_ This is currently a preprint. The citation will be updated after formal publication.
