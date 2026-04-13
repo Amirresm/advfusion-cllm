@@ -46,6 +46,7 @@ def setup_for_peft(
             model,
             config,
         )
+        model.enable_input_require_grads()  # type: ignore
         model.print_trainable_parameters()
 
     return model

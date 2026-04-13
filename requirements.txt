@@ -1,0 +1,12 @@
+absl-py
+accelerate
+bitsandbytes
+datasets
+evaluate
+nltk
+peft
+rich
+rouge-score
+simple-parsing
+torch
+transformers

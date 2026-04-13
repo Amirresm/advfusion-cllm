@@ -15,9 +15,10 @@ python -m scripts.visualize_data \
 	--max_train_samples 1000 \
 	--max_eval_samples 20 \
 	--max_test_samples 20 \
-	--train_text_max_length 512 \
-	--train_target_max_length 512 \
-	--train_completions_only False \
+	--chunk_size 0 \
+	--train_text_max_length 256 \
+	--train_target_max_length 256 \
+	--train_completions_only 1 \
 	--valid_text_max_length 512 \
 	--valid_target_max_length 512 \
 	--test_text_max_length 1024 \

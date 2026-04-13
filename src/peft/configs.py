@@ -8,11 +8,10 @@ import peft
 @dataclass
 class PeftConfigs:
     LoRA = peft.LoraConfig(
-        r=8,
+        r=16,
         lora_alpha=16,
         lora_dropout=0.1,
         bias="none",
-        # task_type=peft.TaskType.CAUSAL_LM,
         task_type=None,
     )
 
@@ -29,6 +28,10 @@ class AdaptersConfigsClass:
         intermediate_lora=False,
         output_lora=False,
         attn_matrices=["q", "v"],
+    )
+    Compacter = adapters.CompacterConfig(
+        reduction_factor=32,
+        phm_dim=4,
     )
 
 
@@ -48,6 +51,8 @@ def get_peft_config(peft_method: str, lib: Literal["peft", "adp"]):
             return AdaptersConfigs.SeqBnInv
         elif peft_method == "lora":
             return AdaptersConfigs.LoRA
+        elif peft_method == "compacter":
+            return AdaptersConfigs.Compacter
         else:
             raise ValueError(f"Unsupported Adapters method: {peft_method}")
     else:

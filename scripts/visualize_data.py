@@ -48,6 +48,7 @@ def main():
         max_train_samples=args.dataset.max_train_samples,
         max_validation_samples=args.dataset.max_eval_samples,
         max_test_samples=args.dataset.max_test_samples,
+        load_from_cache_file=False,
     )
 
     train_dataset = None

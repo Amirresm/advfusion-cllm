@@ -21,7 +21,9 @@ from src.evaluate.evaluate import calc_all_metrics
 from src.utils.jsonl import write_jsonl
 
 
-def print_generation_result(row):
+def print_generation_result(
+    row, total_count, time_spent, time_remaining, time_remaining2
+):
     index = row["index"]
     input = row["input"]
     target = row["target"]
@@ -43,6 +45,26 @@ def print_generation_result(row):
             rprint(f"{k}: {float(v):.5f}")
         except:
             rprint(f"{k}: {v}")
+    time_spent = time_spent or 0
+    time_remaining = time_remaining or 0
+    time_remaining2 = time_remaining2 or 0
+
+    elapsed_minutes = int(time_spent // 60)
+    elapsed_seconds = int(time_spent % 60)
+    elapsed_str = f"{elapsed_minutes}m {elapsed_seconds}s"
+    remaining_minutes = int(time_remaining // 60)
+    remaining_seconds = int(time_remaining % 60)
+    remaining_str = f"{remaining_minutes}m {remaining_seconds}s"
+
+    remaining2_minutes = int(time_remaining2 // 60)
+    remaining2_seconds = int(time_remaining2 % 60)
+    remaining2_str = f"{remaining2_minutes}m {remaining2_seconds}s"
+
+    percentaage_str = f"{(index + 1) / total_count * 100:.2f}%"
+    rprint(
+        f"[yellow]-------Progress:[/yellow] {index + 1}/{total_count} ({percentaage_str}) "
+        f"Elapsed: {elapsed_str}, Remaining: {remaining_str} (alt: {remaining2_str})"
+    )
 
 
 def custom_generation_loop(model, tokenizer, sample_sent):
@@ -143,8 +165,27 @@ def generate_raw_samples(
     tokenizer.padding_side = "left"
 
     generations_path = f"{save_path}_samples.jsonl" if save_path else None
+    # if generations_path and os.path.exists(generations_path):
+    #     os.remove(generations_path)
+
+    initial_index = 0
     if generations_path and os.path.exists(generations_path):
-        os.remove(generations_path)
+        existing_indices = set()
+        with open(generations_path, "r") as f:
+            for line in f:
+                row = json.loads(line)
+                existing_indices.add(row["index"])
+        print(
+            f"Found {len(existing_indices)} existing samples in {generations_path}, skipping them."
+        )
+        samples = {
+            k: [v[i] for i in range(len(v)) if i not in existing_indices]
+            for k, v in samples.items()
+        }
+        initial_index = len(existing_indices)
+        if len(samples[input_column]) == 0:
+            print("All samples already generated, skipping.")
+            return
 
     results = []
     batches = []
@@ -226,7 +267,7 @@ def generate_raw_samples(
                     metrics = {}
 
                 result_row = {
-                    "index": index,
+                    "index": index + initial_index,
                     "input": input,
                     "target": target,
                     "generation": generation,
@@ -248,7 +289,14 @@ def generate_raw_samples(
                         else:
                             pretty_metrics[k] = str(v)
                     result_row["metrics"] = pretty_metrics
-                print_generation_result(result_row)
+
+                print_generation_result(
+                    result_row,
+                    total_samples,
+                    pbar.tasks[0].elapsed,
+                    pbar.tasks[0].time_remaining,
+                    pbar.tasks[0].remaining,
+                )
                 result_row["metadata"] = metadata
                 if generations_path is not None:
                     write_jsonl(generations_path, [result_row], append=True)
